@@ -1,0 +1,61 @@
+#%RAML 1.0
+title: credit-score-api
+version: 1.0.0
+#baseUri: http//localhost:8081/api
+protocols:
+  - HTTP
+  - HTTPS
+
+securitySchemes:
+  barerAuth:
+    type: Pass Through
+    describedBy:
+      headers:
+        Authorization: 
+          type: string
+          required: true
+          example: Barerabc123
+
+/credit-score:
+  /validate:
+    post:
+      securedBy:
+        - barerAuth
+      description: To validate customer credit availability
+      body:
+        application/json:
+          type: object
+          properties:
+            customer_id:
+              type: string
+          example:
+            {
+              customer_id: "AADHR_123"
+            } 
+      responses:
+        200:
+          body:
+            application/json:
+              type: object
+              example:
+                {
+                  "customer_id": "AADHAR_123",
+                  "credit_score": 760,
+                  "eligibility": "ELIGIBLE"
+                }
+        400:
+          body:
+            application/json:
+              type: object
+              example:
+                {
+                  "message": "Missing or Invalid CustomerId!"
+                }
+        404:
+          body:
+            application/json:
+              type: object
+              example:
+                {
+                  "message": "RESOURSE NOT FOUND!"
+                }
